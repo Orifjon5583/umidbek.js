@@ -13,8 +13,8 @@ const STORAGE_KEYS = {
   DRAFT_CODE: "algoolimp_draft_code_"
 };
 
-// Standart Google Apps Script Web App URL (foydalanuvchi UI orqali o'zgartirishi mumkin)
-const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbz_SAMPLE_REPLACE_ME/exec";
+// Standart Google Apps Script Web App URL
+const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbx3p2CIbNPWuM6GYxLovBmZR4w1rm4euHgCEzx_Tx1kS6SKO38H4GQ8yS97OHEmrQrO/exec";
 
 // Holat (State)
 let currentProblem = PROBLEMS_DATA[0];
