@@ -65,7 +65,7 @@
         <div class="hero-content">
           <div class="hero-badge"><i class="fa-solid fa-trophy"></i> Respublika va Xalqaro Musobaqalarga Tayyorgarlik</div>
           <h1>Dasturlash Olimpiadalari Masalalari</h1>
-          <p>Olimpiada, RoboContest va IOI formatidagi saralangan masalalarni C++, Python yoki JavaScript tilida yeching va yechimlaringizni ustozingiz tekshirishi uchun yuboring.</p>
+          <p>Olimpiada, RoboContest va IOI formatidagi saralangan masalalarni JavaScript (Node.js) tilida yeching va yechimlaringizni ustozingiz tekshirishi uchun yuboring.</p>
           <div class="hero-stats">
             <div class="stat-box">
               <span class="stat-number" id="totalProblemsCount">0</span>
@@ -76,8 +76,8 @@
               <span class="stat-label">Yechilgan</span>
             </div>
             <div class="stat-box">
-              <span class="stat-number">3</span>
-              <span class="stat-label">Tillar (C++, Python, JS)</span>
+              <span class="stat-number">1</span>
+              <span class="stat-label">Til: JavaScript (Node.js)</span>
             </div>
           </div>
         </div>
@@ -177,10 +177,8 @@
           <!-- Muharrir boshqaruvi -->
           <div class="editor-toolbar">
             <div class="lang-selector">
-              <label><i class="fa-solid fa-code"></i> Til:</label>
+              <label><i class="fa-solid fa-code"></i> Dasturlash tili:</label>
               <select id="codeLanguage">
-                <option value="cpp">C++ (G++ 17/20)</option>
-                <option value="python">Python 3</option>
                 <option value="javascript">JavaScript (Node.js)</option>
               </select>
             </div>
@@ -249,65 +247,14 @@
             </div>
           </div>
 
-          <!-- 2. C++ Tezkor I/O va Shablon -->
+          <!-- 2. JavaScript (Node.js) Musobaqa Shabloni -->
           <div class="guide-card">
             <div class="guide-card-header">
-              <i class="fa-solid fa-bolt"></i>
-              <h3>C++ Musobaqa Shabloni & Fast I/O</h3>
-            </div>
-            <div class="guide-card-body">
-              <p>C++ da cin/cout sekin ishlashi mumkin. Buning oldini olish uchun Fast I/O satrlarini qo'shing:</p>
-              <pre class="code-block"><code>#include &lt;iostream&gt;
-#include &lt;vector&gt;
-#include &lt;algorithm&gt;
-using namespace std;
-
-int main() {
-    // Tezkor kiritish/chiqarish (Fast I/O)
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-
-    long long n;
-    cin &gt;&gt; n;
-    
-    // Katta sonlar uchun long long ishlating!
-    cout &lt;&lt; n &lt;&lt; "\n"; // endl o'rniga "\n" tezroq ishlaydi
-    return 0;
-}</code></pre>
-            </div>
-          </div>
-
-          <!-- 3. Python Musobaqa Maslahatlari -->
-          <div class="guide-card">
-            <div class="guide-card-header">
-              <i class="fa-brands fa-python"></i>
-              <h3>Python Musobaqa Maslahatlari</h3>
-            </div>
-            <div class="guide-card-body">
-              <p>Pythonda bir qatorda kiritilgan sonlarni o'qib olish va tezkor kiritish usullari:</p>
-              <pre class="code-block"><code>import sys
-# Tezkor o'qish uchun:
-input = sys.stdin.readline
-
-# Bitta qatordagi bir nechta butun sonlarni o'qish:
-a, b = map(int, input().split())
-
-# Ro'yxat (massiv) qilib o'qib olish:
-arr = list(map(int, input().split()))
-
-# Rekursiya chuqurligini oshirish:
-sys.setrecursionlimit(200000)</code></pre>
-            </div>
-          </div>
-
-          <!-- 4. JavaScript (Node.js) Musobaqa Shabloni -->
-          <div class="guide-card">
-            <div class="guide-card-header">
-              <i class="fa-brands fa-js"></i>
+              <i class="fa-brands fa-js" style="color: #f7df1e;"></i>
               <h3>JavaScript (Node.js) Musobaqa Shabloni</h3>
             </div>
             <div class="guide-card-body">
-              <p>Node.js da musobaqa ma'lumotlarini (stdin) eng tez o'qib olish usuli:</p>
+              <p>Node.js da musobaqa ma'lumotlarini (stdin) eng tez o'qib olish va ishlash usuli:</p>
               <pre class="code-block"><code>const fs = require('fs');
 
 function solve() {

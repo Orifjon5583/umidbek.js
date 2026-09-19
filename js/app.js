@@ -18,7 +18,7 @@ const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbx3p2CIbNPWu
 
 // Holat (State)
 let currentProblem = PROBLEMS_DATA[0];
-let currentLanguage = "cpp"; // "cpp" yoki "python"
+let currentLanguage = "javascript"; // Faqat JavaScript (Node.js)
 let submissionsHistory = [];
 
 // ==========================================================================
@@ -553,9 +553,7 @@ async function handleSubmission() {
   // 2. XATOSIZ BO'LSA -> GOOGLE SHEETS'GA YUBORILADI!
   const sheetsUrl = localStorage.getItem(STORAGE_KEYS.SHEETS_URL) || DEFAULT_SHEETS_URL;
   const now = new Date();
-  let langLabel = "C++";
-  if (currentLanguage === "python") langLabel = "Python 3";
-  else if (currentLanguage === "javascript") langLabel = "JavaScript (Node.js)";
+  const langLabel = "JavaScript (Node.js)";
 
   const plainStatement = currentProblem.statement ? currentProblem.statement.replace(/\$([^\$]+)\$/g, '$1') : "";
 
