@@ -65,7 +65,7 @@
         <div class="hero-content">
           <div class="hero-badge"><i class="fa-solid fa-trophy"></i> Respublika va Xalqaro Musobaqalarga Tayyorgarlik</div>
           <h1>Dasturlash Olimpiadalari Masalalari</h1>
-          <p>Olimpiada, RoboContest va IOI formatidagi saralangan masalalarni C++ yoki Python tilida yeching va yechimlaringizni ustozingiz tekshirishi uchun yuboring.</p>
+          <p>Olimpiada, RoboContest va IOI formatidagi saralangan masalalarni C++, Python yoki JavaScript tilida yeching va yechimlaringizni ustozingiz tekshirishi uchun yuboring.</p>
           <div class="hero-stats">
             <div class="stat-box">
               <span class="stat-number" id="totalProblemsCount">0</span>
@@ -76,8 +76,8 @@
               <span class="stat-label">Yechilgan</span>
             </div>
             <div class="stat-box">
-              <span class="stat-number">2</span>
-              <span class="stat-label">Tillar (C++, Python)</span>
+              <span class="stat-number">3</span>
+              <span class="stat-label">Tillar (C++, Python, JS)</span>
             </div>
           </div>
         </div>
@@ -181,6 +181,7 @@
               <select id="codeLanguage">
                 <option value="cpp">C++ (G++ 17/20)</option>
                 <option value="python">Python 3</option>
+                <option value="javascript">JavaScript (Node.js)</option>
               </select>
             </div>
 
@@ -293,6 +294,30 @@ arr = list(map(int, input().split()))
 
 # Rekursiya chuqurligini oshirish:
 sys.setrecursionlimit(200000)</code></pre>
+            </div>
+          </div>
+
+          <!-- 4. JavaScript (Node.js) Musobaqa Shabloni -->
+          <div class="guide-card">
+            <div class="guide-card-header">
+              <i class="fa-brands fa-js"></i>
+              <h3>JavaScript (Node.js) Musobaqa Shabloni</h3>
+            </div>
+            <div class="guide-card-body">
+              <p>Node.js da musobaqa ma'lumotlarini (stdin) eng tez o'qib olish usuli:</p>
+              <pre class="code-block"><code>const fs = require('fs');
+
+function solve() {
+    // Barcha ma'lumotlarni bir vaqtda o'qib bo'laklash:
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length === 0 || input[0] === '') return;
+
+    const a = BigInt(input[0]);
+    const b = BigInt(input[1]);
+    console.log((a + b).toString());
+}
+
+solve();</code></pre>
             </div>
           </div>
 

@@ -1,6 +1,7 @@
 /**
  * AlgoOlimp — Masalalar Bazasi (Problemset)
  * Maktab va litsey o'quvchilari uchun olimpiada darajasidagi saralangan masalalar
+ * Tillar: C++, Python 3, JavaScript (Node.js)
  */
 
 const PROBLEMS_DATA = [
@@ -20,7 +21,7 @@ const PROBLEMS_DATA = [
       { input: "3 5", output: "8", explanation: "3 + 5 = 8" },
       { input: "-10 25", output: "15", explanation: "-10 + 25 = 15" }
     ],
-    hint: "Katta sonlar bilan ishlaganda C++ da int o'rniga long long ishlatish tavsiya etiladi.",
+    hint: "Katta sonlar bilan ishlaganda C++ da int o'rniga long long ishlatish tavsiya etiladi. JS da BigInt ishlatiladi.",
     templates: {
       cpp: `#include <iostream>
 using namespace std;
@@ -42,7 +43,18 @@ def solve():
     print(a + b)
 
 if __name__ == "__main__":
-    solve()`
+    solve()`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 2) return;
+    const a = BigInt(input[0]);
+    const b = BigInt(input[1]);
+    console.log((a + b).toString());
+}
+
+solve();`
     }
   },
 
@@ -60,7 +72,7 @@ if __name__ == "__main__":
     samples: [
       { input: "4 5", output: "20 18", explanation: "Yuzi: 4 * 5 = 20, Perimetri: 2 * (4 + 5) = 18" }
     ],
-    hint: "Tomonlar ko'paytmasi $10^{12}$ gacha yetishi mumkin, C++ da long long zarur.",
+    hint: "Tomonlar ko'paytmasi $10^{12}$ gacha yetishi mumkin, C++ da long long, JS da BigInt zarur.",
     templates: {
       cpp: `#include <iostream>
 using namespace std;
@@ -74,7 +86,20 @@ int main() {
     return 0;
 }`,
       python: `a, b = map(int, input().split())
-print(a * b, 2 * (a + b))`
+print(a * b, 2 * (a + b))`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 2) return;
+    const a = BigInt(input[0]);
+    const b = BigInt(input[1]);
+    const S = a * b;
+    const P = 2n * (a + b);
+    console.log(\`\${S} \${P}\`);
+}
+
+solve();`
     }
   },
 
@@ -94,7 +119,7 @@ print(a * b, 2 * (a + b))`
       { input: "12 45 8", output: "45", explanation: "Eng katta son 45" },
       { input: "-5 -1 -9", output: "-1", explanation: "Manfiy sonlar ichida -1 eng kattasi" }
     ],
-    hint: "C++ da max(a, max(b, c)) yoki if shartlaridan foydalaning.",
+    hint: "C++ da max, Pythonda max(), JS da Math.max yoki solishtirish shartlaridan foydalaning.",
     templates: {
       cpp: `#include <iostream>
 #include <algorithm>
@@ -107,7 +132,22 @@ int main() {
     return 0;
 }`,
       python: `a, b, c = map(int, input().split())
-print(max(a, b, c))`
+print(max(a, b, c))`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 3) return;
+    const a = BigInt(input[0]);
+    const b = BigInt(input[1]);
+    const c = BigInt(input[2]);
+    let maxVal = a;
+    if (b > maxVal) maxVal = b;
+    if (c > maxVal) maxVal = c;
+    console.log(maxVal.toString());
+}
+
+solve();`
     }
   },
 
@@ -145,7 +185,19 @@ int main() {
 if (y % 4 == 0 and y % 100 != 0) or (y % 400 == 0):
     print("YES")
 else:
-    print("NO")`
+    print("NO")`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const y = parseInt(fs.readFileSync(0, 'utf-8').trim(), 10);
+    if ((y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0)) {
+        console.log("YES");
+    } else {
+        console.log("NO");
+    }
+}
+
+solve();`
     }
   },
 
@@ -183,7 +235,23 @@ int main() {
 if a + b > c and a + c > b and b + c > a:
     print("YES")
 else:
-    print("NO")`
+    print("NO")`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 3) return;
+    const a = BigInt(input[0]);
+    const b = BigInt(input[1]);
+    const c = BigInt(input[2]);
+    if (a + b > c && a + c > b && b + c > a) {
+        console.log("YES");
+    } else {
+        console.log("NO");
+    }
+}
+
+solve();`
     }
   },
 
@@ -203,7 +271,7 @@ else:
       { input: "12345", output: "15", explanation: "1 + 2 + 3 + 4 + 5 = 15" },
       { input: "1009", output: "10", explanation: "1 + 0 + 0 + 9 = 10" }
     ],
-    hint: "N soni 10^18 gacha bo'lishi mumkin! C++ da long long yoki string ko'rinishida o'qish mumkin.",
+    hint: "N soni 10^18 gacha bo'lishi mumkin! Satr sifatida o'qib har bir belgisini qo'shib chiqish eng oson yo'l.",
     templates: {
       cpp: `#include <iostream>
 #include <string>
@@ -220,7 +288,21 @@ int main() {
     return 0;
 }`,
       python: `s = input().strip()
-print(sum(int(c) for c in s))`
+print(sum(int(c) for c in s))`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const s = fs.readFileSync(0, 'utf-8').trim();
+    let sum = 0n;
+    for (const char of s) {
+        if (char >= '0' && char <= '9') {
+            sum += BigInt(char);
+        }
+    }
+    console.log(sum.toString());
+}
+
+solve();`
     }
   },
 
@@ -274,7 +356,26 @@ else:
             is_prime = False
             break
         i += 1
-    print("PRIME" if is_prime else "COMPOSITE")`
+    print("PRIME" if is_prime else "COMPOSITE")`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const n = BigInt(fs.readFileSync(0, 'utf-8').trim());
+    if (n <= 1n) {
+        console.log("NEITHER");
+        return;
+    }
+    let isPrime = true;
+    for (let i = 2n; i * i <= n; i++) {
+        if (n % i === 0n) {
+            isPrime = false;
+            break;
+        }
+    }
+    console.log(isPrime ? "PRIME" : "COMPOSITE");
+}
+
+solve();`
     }
   },
 
@@ -319,7 +420,29 @@ int main() {
 a, b = map(int, input().split())
 g = math.gcd(a, b)
 l = (a * b) // g
-print(g, l)`
+print(g, l)`,
+      javascript: `const fs = require('fs');
+
+function gcd(a, b) {
+    while (b > 0n) {
+        let t = b;
+        b = a % b;
+        a = t;
+    }
+    return a;
+}
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 2) return;
+    const a = BigInt(input[0]);
+    const b = BigInt(input[1]);
+    const g = gcd(a, b);
+    const l = (a / g) * b;
+    console.log(\`\${g} \${l}\`);
+}
+
+solve();`
     }
   },
 
@@ -368,7 +491,26 @@ for i, v in enumerate(arr, start=1):
     if v > max_val:
         max_val = v
         pos = i
-print(max_val, pos)`
+print(max_val, pos)`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 2) return;
+    const n = parseInt(input[0], 10);
+    let maxVal = BigInt(input[1]);
+    let maxPos = 1;
+    for (let i = 1; i <= n; i++) {
+        const val = BigInt(input[i]);
+        if (val > maxVal) {
+            maxVal = val;
+            maxPos = i;
+        }
+    }
+    console.log(\`\${maxVal} \${maxPos}\`);
+}
+
+solve();`
     }
   },
 
@@ -386,7 +528,7 @@ print(max_val, pos)`
     samples: [
       { input: "4\\n10 20 30 40", output: "40 30 20 10", explanation: "Massiv teskarisi chiqarildi." }
     ],
-    hint: "Siklni oxirgi elementdan birinchisiga qarab aylantiring: for (int i = n - 1; i >= 0; i--)",
+    hint: "Siklni oxirgi elementdan birinchisiga qarab aylantiring yoki reverse() metodidan foydalaning.",
     templates: {
       cpp: `#include <iostream>
 #include <vector>
@@ -405,7 +547,18 @@ int main() {
 }`,
       python: `n = int(input())
 arr = input().split()
-print(" ".join(reversed(arr)))`
+print(" ".join(reversed(arr)))`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 2) return;
+    const n = parseInt(input[0], 10);
+    const arr = input.slice(1, n + 1);
+    console.log(arr.reverse().join(' '));
+}
+
+solve();`
     }
   },
 
@@ -423,7 +576,7 @@ print(" ".join(reversed(arr)))`
     samples: [
       { input: "6\\n2 3 2 5 3 2", output: "3", explanation: "Massivda faqat 2, 3 va 5 sonlari bor, ya'ni 3 ta unikal element." }
     ],
-    hint: "C++ da std::set yoki saralab qo'shnilarni tekshirish (std::sort + std::unique) juda tez ishlaydi. Pythonda len(set(arr)).",
+    hint: "C++ da std::set yoki std::sort + unique, Pythonda set(), JavaScriptda new Set() juda qulay.",
     templates: {
       cpp: `#include <iostream>
 #include <vector>
@@ -453,7 +606,18 @@ def solve():
     print(len(arr))
 
 if __name__ == "__main__":
-    solve()`
+    solve()`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 2) return;
+    const n = parseInt(input[0], 10);
+    const unique = new Set(input.slice(1, n + 1));
+    console.log(unique.size);
+}
+
+solve();`
     }
   },
 
@@ -499,7 +663,16 @@ int main() {
 if s == s[::-1]:
     print("YES")
 else:
-    print("NO")`
+    print("NO")`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const s = fs.readFileSync(0, 'utf-8').trim();
+    const rev = s.split('').reverse().join('');
+    console.log(s === rev ? "YES" : "NO");
+}
+
+solve();`
     }
   },
 
@@ -537,7 +710,20 @@ int main() {
 }`,
       python: `s = input().strip()
 vowels = set("aeiou")
-print(sum(1 for c in s if c in vowels))`
+print(sum(1 for c in s if c in vowels))`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const s = fs.readFileSync(0, 'utf-8').trim();
+    const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+    let count = 0;
+    for (const char of s) {
+        if (vowels.has(char)) count++;
+    }
+    console.log(count);
+}
+
+solve();`
     }
   },
 
@@ -556,7 +742,7 @@ print(sum(1 for c in s if c in vowels))`
     samples: [
       { input: "5\\n4 2 7 1 3", output: "1 2 3 4 7", explanation: "O'sish tartibida saralandi." }
     ],
-    hint: "C++ da std::sort(a.begin(), a.end()) $O(N \\log N)$ vaqtda saralaydi.",
+    hint: "C++ da std::sort, Pythonda arr.sort(), JavaScriptda arr.sort((a,b) => ...).",
     templates: {
       cpp: `#include <iostream>
 #include <vector>
@@ -589,7 +775,19 @@ def solve():
     print(*(arr))
 
 if __name__ == "__main__":
-    solve()`
+    solve()`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length < 2) return;
+    const n = parseInt(input[0], 10);
+    const arr = input.slice(1, n + 1).map(BigInt);
+    arr.sort((a, b) => (a < b ? -1n : a > b ? 1n : 0n));
+    console.log(arr.join(' '));
+}
+
+solve();`
     }
   },
 
@@ -611,7 +809,7 @@ if __name__ == "__main__":
         explanation: "3 massivda bor (YES), 6 yo'q (NO), 9 bor (YES)." 
       }
     ],
-    hint: "Har bir so'rov uchun chiziqli qidiruv qilsangiz O(N*Q) TLE beradi. Ikkilik qidiruv (Binary Search) O(log N) talab etadi.",
+    hint: "Ikkilik qidiruv (Binary Search) har bir so'rov uchun O(log N) talab etadi.",
     templates: {
       cpp: `#include <iostream>
 #include <vector>
@@ -660,7 +858,36 @@ def solve():
     print("\\n".join(results))
 
 if __name__ == "__main__":
-    solve()`
+    solve()`,
+      javascript: `const fs = require('fs');
+
+function binarySearch(arr, x) {
+    let l = 0, r = arr.length - 1;
+    while (l <= r) {
+        const mid = (l + r) >> 1;
+        if (arr[mid] === x) return true;
+        if (arr[mid] < x) l = mid + 1;
+        else r = mid - 1;
+    }
+    return false;
+}
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length === 0) return;
+    const n = parseInt(input[0], 10);
+    const q = parseInt(input[1], 10);
+    const arr = input.slice(2, 2 + n).map(BigInt);
+    const queries = input.slice(2 + n, 2 + n + q).map(BigInt);
+
+    const results = [];
+    for (const x of queries) {
+        results.push(binarySearch(arr, x) ? "YES" : "NO");
+    }
+    console.log(results.join('\\n'));
+}
+
+solve();`
     }
   },
 
@@ -682,7 +909,7 @@ if __name__ == "__main__":
         explanation: "Vali 95 ball bilan 1-o'rinda. Ali va Jasur 85 ball, alifbo tartibida Ali oldin keladi."
       }
     ],
-    hint: "Struktura (struct) va maxsus taqqoslash funksiyasi (custom comparator) dan foydalaning.",
+    hint: "Struktura/Obyekt va maxsus taqqoslash funksiyasi (custom comparator) dan foydalaning.",
     templates: {
       cpp: `#include <iostream>
 #include <vector>
@@ -725,7 +952,31 @@ for _ in range(n):
 students.sort(key=lambda s: (-s[1], s[0]))
 
 for name, score in students:
-    print(f"{name} {score}")`
+    print(f"{name} {score}")`,
+      javascript: `const fs = require('fs');
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim().split(/\\s+/);
+    if (!input || input.length === 0) return;
+    const n = parseInt(input[0], 10);
+    const students = [];
+    let idx = 1;
+    for (let i = 0; i < n; i++) {
+        students.push({
+            name: input[idx++],
+            score: parseInt(input[idx++], 10)
+        });
+    }
+
+    students.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.name.localeCompare(b.name);
+    });
+
+    console.log(students.map(s => \`\${s.name} \${s.score}\`).join('\\n'));
+}
+
+solve();`
     }
   }
 ];

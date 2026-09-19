@@ -363,9 +363,16 @@ function loadTemplate(forceReset = false) {
   if (!forceReset && savedDraft) {
     textarea.value = savedDraft;
   } else {
+    let defaultCode = "#include <iostream>\nusing namespace std;\n\nint main() {\n    return 0;\n}";
+    if (currentLanguage === "python") {
+      defaultCode = "import sys\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()";
+    } else if (currentLanguage === "javascript") {
+      defaultCode = "const fs = require('fs');\n\nfunction solve() {\n    // Node.js musobaqa yechimi\n}\n\nsolve();";
+    }
+
     const template = currentProblem.templates && currentProblem.templates[currentLanguage] 
       ? currentProblem.templates[currentLanguage] 
-      : (currentLanguage === "cpp" ? "#include <iostream>\nusing namespace std;\n\nint main() {\n    return 0;\n}" : "import sys\n\ndef main():\n    pass\n\nif __name__ == '__main__':\n    main()");
+      : defaultCode;
     textarea.value = template;
     localStorage.setItem(draftKey, template);
   }
@@ -409,6 +416,10 @@ async function handleSubmission() {
 
   const sheetsUrl = localStorage.getItem(STORAGE_KEYS.SHEETS_URL) || DEFAULT_SHEETS_URL;
   const now = new Date();
+  let langLabel = "C++";
+  if (currentLanguage === "python") langLabel = "Python 3";
+  else if (currentLanguage === "javascript") langLabel = "JavaScript (Node.js)";
+
   const submissionData = {
     timestamp: now.toISOString(),
     dateFormatted: now.toLocaleString("uz-UZ"),
@@ -417,7 +428,7 @@ async function handleSubmission() {
     problemId: currentProblem.id,
     problemTitle: currentProblem.title,
     topic: currentProblem.topicName,
-    language: currentLanguage === "cpp" ? "C++" : "Python 3",
+    language: langLabel,
     code: code,
     note: note || "-",
     status: "Topshirildi"
@@ -564,7 +575,13 @@ window.viewHistoricalCode = function(index) {
   const loadBtn = document.getElementById("loadIntoEditorBtn");
   loadBtn.onclick = () => {
     selectProblem(sub.problemId);
-    document.getElementById("codeLanguage").value = sub.language.toLowerCase().includes("python") ? "python" : "cpp";
+    if (sub.language.toLowerCase().includes("python")) {
+      document.getElementById("codeLanguage").value = "python";
+    } else if (sub.language.toLowerCase().includes("javascript") || sub.language.toLowerCase().includes("node")) {
+      document.getElementById("codeLanguage").value = "javascript";
+    } else {
+      document.getElementById("codeLanguage").value = "cpp";
+    }
     currentLanguage = document.getElementById("codeLanguage").value;
     document.getElementById("codeTextarea").value = sub.code;
     modal.classList.remove("active");
