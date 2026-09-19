@@ -48,9 +48,6 @@
         <button id="themeToggleBtn" class="icon-btn" title="Mavzuni almashtirish">
           <i class="fa-solid fa-sun"></i>
         </button>
-        <button id="settingsBtn" class="icon-btn" title="Sozlamalar (Google Sheets ulanishi)">
-          <i class="fa-solid fa-gear"></i>
-        </button>
       </div>
     </div>
   </header>
@@ -375,39 +372,7 @@ solve();</code></pre>
 
   </main>
 
-  <!-- Google Sheets Sozlamalari Modali -->
-  <div id="settingsModal" class="modal-overlay">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3><i class="fa-solid fa-sliders"></i> O'qituvchi / Administrator Sozlamalari</h3>
-        <button class="close-modal-btn" id="closeSettingsModal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>O'quvchilar yuborgan barcha yechimlar Google Jadvalingizga (Google Sheets) tushishi uchun Google Apps Script Web App havolasini (URL) kiriting:</p>
-        
-        <div class="input-group">
-          <label for="sheetsWebhookInput">Google Apps Script Web App URL:</label>
-          <input type="url" id="sheetsWebhookInput" placeholder="https://script.google.com/macros/s/.../exec" />
-          <small class="field-hint">Bu havola brauzeringizda xavfsiz saqlanadi. O'rnatish yo'riqnomasi <code>GOOGLE_SHEETS_SETUP.md</code> faylida ko'rsatilgan.</small>
-        </div>
 
-        <div class="alert-box">
-          <i class="fa-solid fa-circle-info"></i>
-          <div>
-            <strong>Netlify uchun tayyor!</strong> Ushbu saytni Netlify'ga joylaganingizda (deploy) hech qanday server kerak emas. O'quvchilar javoblari to'g'ridan-to'g'ri shu Google Sheets havolangizga yoziladi.
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button id="testWebhookBtn" class="btn btn-secondary">
-          <i class="fa-solid fa-vial"></i> Test yuborish
-        </button>
-        <button id="saveSettingsBtn" class="btn btn-primary">
-          <i class="fa-solid fa-check"></i> Saqlash
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Yechim ko'rish Modali (Tarixdagi kodni ko'rish uchun) -->
   <div id="viewCodeModal" class="modal-overlay">

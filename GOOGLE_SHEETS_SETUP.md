@@ -1,16 +1,16 @@
-# 📊 Google Sheets va Netlify Integratsiyasi Qo'llanmasi
+# 📊 Sizning Google Sheets Jadvalingiz bilan Bog'lash Qo'llanmasi
 
-Ushbu platforma hech qanday backend server talab qilmaydi. O'quvchilar yechgan barcha masalalar va ularning yozgan kodlari bevosita sizning **Google Sheets (Google Jadval)** faylingizga avtomatik tarzda tushadi.
+Siz taqdim etgan Google Jadval havolasi:
+👉 **[Sizning Jadvalingiz](https://docs.google.com/spreadsheets/d/1UzfTgjN47KEItinomUqdnz89CQ9N6Oq7nXIGrpJJEXg/edit?usp=sharing)**
 
-Quyidagi 4 ta oddiy qadamni bajaring:
+Ushbu jadval **o'quvchilarga mutlaqo ko'rinmaydi**. O'quvchi saytda faqat masalani ko'radi va kodini topshiradi. Uning yozgan kodi to'g'ridan-to'g'ri sizning jadvalingizga kelib tushadi.
 
 ---
 
-## 1-Qadam: Yangi Google Sheets jadvali oching
+## 🛠 Jadvalni 2 daqiqada faollashtirish (Qadamma-qadam):
 
-1. [Google Drive](https://drive.google.com) yoki [Google Sheets](https://sheets.new) ga kiring.
-2. Yangi jadval yarating va nomini masalan **"AlgoOlimp_Natijalar"** deb qo'ying.
-3. 1-qatorga (sarlavhalar uchun) quyidagi ustun nomlarini yozing:
+### 1-Qadam: Jadvalga sarlavhalarni yozing
+Jadvalingizning 1-qatoriga quyidagi 10 ta ustun nomini yozib qo'ying:
 
 | A | B | C | D | E | F | G | H | I | J |
 |---|---|---|---|---|---|---|---|---|---|
@@ -18,19 +18,21 @@ Quyidagi 4 ta oddiy qadamni bajaring:
 
 ---
 
-## 2-Qadam: Apps Script kodini joylashtirish
-
-1. Google Jadvalingizning yuqori menyusidan **Kengaytmalar (Расширения / Extensions)** -> **Apps Script** bo'limiga kiring.
-2. Ochilgan kod tahrirlagichidagi barcha eski kodni o'chirib, o'rniga quyidagi tayyor kodni to'liq nusxalab qo'ying:
+### 2-Qadam: Apps Script kodini joylashtiring
+1. [Sizning Jadvalingiz](https://docs.google.com/spreadsheets/d/1UzfTgjN47KEItinomUqdnz89CQ9N6Oq7nXIGrpJJEXg/edit?usp=sharing) ga kiring.
+2. Yuqori menyudan **Kengaytmalar (Extensions / Расширения)** -> **Apps Script** bo'limiga kiring.
+3. Eskirgan kodlarni o'chirib, o'rniga quyidagi tayyor kodni qo'ying:
 
 ```javascript
 function doPost(e) {
   try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var rawData = e.postData.contents;
-    var data = JSON.parse(rawData);
+    // Sizning shaxsiy Google Jadvalingiz ID raqami
+    var SPREADSHEET_ID = "1UzfTgjN47KEItinomUqdnz89CQ9N6Oq7nXIGrpJJEXg";
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
 
-    // Yangi qatorga ma'lumotlarni qo'shish
+    // Yangi yechimni jadvalga qator qilib qo'shish
     sheet.appendRow([
       data.dateFormatted || new Date().toLocaleString("uz-UZ"),
       data.studentName || "Noma'lum",
@@ -44,11 +46,11 @@ function doPost(e) {
       data.status || "Topshirildi"
     ]);
 
-    // Formatlash: kod ustunini to'g'ri ko'rinishda saqlash
+    // Kod ustunini chiroyli ko'rsatish
     var lastRow = sheet.getLastRow();
     sheet.getRange(lastRow, 8).setWrap(true);
 
-    return ContentService.createTextOutput(JSON.stringify({ "status": "success", "row": lastRow }))
+    return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
@@ -57,55 +59,26 @@ function doPost(e) {
   }
 }
 
-// Brauzer orqali tekshirish uchun GET funksiyasi
 function doGet(e) {
-  return ContentService.createTextOutput("AlgoOlimp Google Sheets Web App faol ishlamoqda!");
+  return ContentService.createTextOutput("AlgoOlimp Google Sheets qabul qiluvchisi ishlamoqda!");
 }
 ```
 
-3. Yuqoridagi **Saqlash (дискета / Save)** tugmasini bosing (Ctrl + S).
+4. Saqlash tugmasini bosing (**Ctrl + S**).
 
 ---
 
-## 3-Qadam: Web App sifatida ishga tushirish (Deploy)
-
-1. O'ng yuqori burchakdagi ko'k **Deploy (Внедрить)** tugmasini bosing -> **New deployment (Новое развертывание)** ni tanlang.
-2. Chapdagi tishli g'ildirak (sozlama) belgisini bosib, **Web app (Веб-приложение)** turini tanlang.
-3. Quyidagi parametrlarni o'rnating:
-   - **Description:** `AlgoOlimp Submissions`
-   - **Execute as:** `Me (mening nomimdan)`
-   - **Who has access:** `Anyone (Hamma / Все)` — *(DIQQAT: Bu yerda albatta "Anyone" tanlanishi shart, shunda o'quvchilar login qilmasdan ham kodi jadvalga tushadi)*.
-4. **Deploy** tugmasini bosing.
-5. Google sizdan ruxsat (Authorize access) so'raydi:
-   - O'z Google profilingizni tanlang.
-   - *"Google hasn't verified this app"* chiqsa, pastdagi **Advanced** -> **Go to (unsafe)** ni bosing.
-   - **Allow (Разрешить)** tugmasini bosing.
-6. Ekranda **Web app URL** chiqadi (masalan: `https://script.google.com/macros/s/AKfycb.../exec`). Ushbu havolani **Copy** qilib oling!
+### 3-Qadam: Web App sifatida ishga tushirish (Deploy)
+1. O'ng yuqori burchakdagi ko'k **Deploy (Внедрить)** tugmasini bosing -> **New deployment** ni tanlang.
+2. Chapdagi tishli g'ildirak belgisidan **Web app** ni tanlang:
+   - **Execute as:** `Me` (mening nomimdan)
+   - **Who has access:** `Anyone` (Hamma / Все) — *shunda o'quvchilar login qilmasdan yubora oladi*.
+3. **Deploy** tugmasini bosing va Google so'ragan ruxsatni bering (**Advanced** -> **Go to (unsafe)** -> **Allow**).
+4. Ekranda hosil bo'lgan **Web app URL** havolasini nusxalab oling (masalan: `https://script.google.com/macros/s/AKfycb.../exec`).
 
 ---
 
-## 4-Qadam: Saytga ulash
+### 4-Qadam: Web App URL ni menga yuboring yoki `js/app.js` ga qo'ying
+O'sha chiqqan `https://script.google.com/macros/s/.../exec` havolani shu yerga chatga tashlasangiz, men uni sayt ichiga bir marta ulab, GitHub'ga push qilib qo'yaman.
 
-Sizda 2 xil qulay usul bor:
-
-### Variant A (Sayt interfeysining o'zidan - eng osoni):
-1. Saytni oching (yoki Netlify'ga yuklagandan keyin).
-2. Yuqoridagi o'ng burchakdagi **⚙ Sozlamalar (Tishli g'ildirak)** tugmasini bosing.
-3. O'zingiz nusxalagan Google Web App havolasini qo'ying va **"Saqlash"** ni bosing.
-4. **"Test yuborish"** tugmasini bossangiz, jadvalingizga avtomatik sinov qatori tushadi!
-
-### Variant B (Kodni o'zida doimiy qilib qo'yish):
-`js/app.js` faylining 17-qatoridagi:
-```javascript
-const DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbz_SAMPLE_REPLACE_ME/exec";
-```
-qatoriga o'zingizning havolangizni qo'yib qo'ysangiz, har qanday foydalanuvchi kirganda avtomatik shu havola orqali ishlaydi.
-
----
-
-## 🚀 Netlify'ga joylashtirish (Deploy) bo'yicha yo'riqnoma
-
-1. [https://www.netlify.com/](https://www.netlify.com/) ga kiring va ro'yxatdan o'ting.
-2. Bosh sahifada **"Add new site"** -> **"Deploy manually"** bo'limiga kiring.
-3. Ushbu papkani (ichida `index.html`, `css`, `js` bo'lgan butun jildni) shunchaki sichqoncha bilan ushlab Netlify oynasiga tashlang (Drag & Drop).
-4. Bir necha soniyada saytingiz butun dunyo bo'ylab bepul internet domenida (masalan, `algoolimp.netlify.app`) ishga tushadi!
+Shundan so'ng, saytda hech qanday sozlama tugmasi ko'rinmaydi, o'quvchilar jadvalingiz borligini ham bilishmaydi, lekin ular yozgan har bitta kod to'g'ridan-to'g'ri sizning jadvalingizga tushaveradi!

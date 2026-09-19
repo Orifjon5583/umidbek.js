@@ -79,7 +79,7 @@ function setupEventListeners() {
   // Logo bosilganda birinchi sahifaga qaytish
   document.querySelector(".nav-brand").addEventListener("click", () => switchTab("problems-view"));
 
-  // Sozlamalar modali
+  // Sozlamalar (O'qituvchi uchun - o'quvchilardan yashirilgan)
   const settingsModal = document.getElementById("settingsModal");
   const settingsBtn = document.getElementById("settingsBtn");
   const closeSettingsModal = document.getElementById("closeSettingsModal");
@@ -87,59 +87,61 @@ function setupEventListeners() {
   const testWebhookBtn = document.getElementById("testWebhookBtn");
   const sheetsWebhookInput = document.getElementById("sheetsWebhookInput");
 
-  settingsBtn.addEventListener("click", () => {
-    const savedUrl = localStorage.getItem(STORAGE_KEYS.SHEETS_URL) || "";
-    sheetsWebhookInput.value = savedUrl;
-    settingsModal.classList.add("active");
-  });
+  if (settingsBtn && settingsModal) {
+    settingsBtn.addEventListener("click", () => {
+      const savedUrl = localStorage.getItem(STORAGE_KEYS.SHEETS_URL) || "";
+      sheetsWebhookInput.value = savedUrl;
+      settingsModal.classList.add("active");
+    });
 
-  closeSettingsModal.addEventListener("click", () => {
-    settingsModal.classList.remove("active");
-  });
+    closeSettingsModal?.addEventListener("click", () => {
+      settingsModal.classList.remove("active");
+    });
 
-  saveSettingsBtn.addEventListener("click", () => {
-    const url = sheetsWebhookInput.value.trim();
-    if (url) {
-      localStorage.setItem(STORAGE_KEYS.SHEETS_URL, url);
-      showToast("Google Sheets Web App URL muvaffaqiyatli saqlandi!", "success");
-    } else {
-      localStorage.removeItem(STORAGE_KEYS.SHEETS_URL);
-      showToast("Havola tozalandi.", "info");
-    }
-    settingsModal.classList.remove("active");
-  });
+    saveSettingsBtn?.addEventListener("click", () => {
+      const url = sheetsWebhookInput.value.trim();
+      if (url) {
+        localStorage.setItem(STORAGE_KEYS.SHEETS_URL, url);
+        showToast("Google Sheets Web App URL saqlandi!", "success");
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.SHEETS_URL);
+        showToast("Havola tozalandi.", "info");
+      }
+      settingsModal.classList.remove("active");
+    });
 
-  testWebhookBtn.addEventListener("click", async () => {
-    const url = sheetsWebhookInput.value.trim();
-    if (!url) {
-      showToast("Iltimos, avval Google Sheets URL manzilini kiriting!", "error");
-      return;
-    }
-    testWebhookBtn.disabled = true;
-    testWebhookBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sinov yuborilmoqda...`;
-    
-    try {
-      await sendToGoogleSheets(url, {
-        timestamp: new Date().toISOString(),
-        dateFormatted: new Date().toLocaleString("uz-UZ"),
-        studentName: "Test O'quvchi",
-        school: "AlgoOlimp Test Tizimi",
-        problemId: "TEST",
-        problemTitle: "Ulanish sinovi (Connection Test)",
-        topic: "Test",
-        language: "test",
-        code: "// Bu tizim ulanishini tekshirish uchun yuborilgan test ma'lumot",
-        note: "Netlify ulanish sinovi muvaffaqiyatli!",
-        status: "TEST_OK"
-      });
-      showToast("Google Sheets'ga sinov signali yuborildi! Jadvalingizni tekshiring.", "success");
-    } catch (err) {
-      showToast("Xatolik: " + err.message, "error");
-    } finally {
-      testWebhookBtn.disabled = false;
-      testWebhookBtn.innerHTML = `<i class="fa-solid fa-vial"></i> Test yuborish`;
-    }
-  });
+    testWebhookBtn?.addEventListener("click", async () => {
+      const url = sheetsWebhookInput.value.trim();
+      if (!url) {
+        showToast("Iltimos, avval Google Sheets URL manzilini kiriting!", "error");
+        return;
+      }
+      testWebhookBtn.disabled = true;
+      testWebhookBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Sinov yuborilmoqda...`;
+      
+      try {
+        await sendToGoogleSheets(url, {
+          timestamp: new Date().toISOString(),
+          dateFormatted: new Date().toLocaleString("uz-UZ"),
+          studentName: "Test O'quvchi",
+          school: "AlgoOlimp Test Tizimi",
+          problemId: "TEST",
+          problemTitle: "Ulanish sinovi (Connection Test)",
+          topic: "Test",
+          language: "test",
+          code: "// Bu tizim ulanishini tekshirish uchun yuborilgan test ma'lumot",
+          note: "Netlify ulanish sinovi muvaffaqiyatli!",
+          status: "TEST_OK"
+        });
+        showToast("Google Sheets'ga sinov signali yuborildi!", "success");
+      } catch (err) {
+        showToast("Xatolik: " + err.message, "error");
+      } finally {
+        testWebhookBtn.disabled = false;
+        testWebhookBtn.innerHTML = `<i class="fa-solid fa-vial"></i> Test yuborish`;
+      }
+    });
+  }
 
   // Kod ko'rish modali
   const viewCodeModal = document.getElementById("viewCodeModal");
