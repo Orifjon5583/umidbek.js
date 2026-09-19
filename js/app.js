@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupEventListeners();
   setupCodeEditor();
   updateTotalCounters();
+  checkStudentWelcomeModal();
 });
 
 // ==========================================================================
@@ -191,17 +192,41 @@ function setupEventListeners() {
     }
   });
 
-  // Welcome modal va profil boshqaruvi
-  const saveWelcomeBtn = document.getElementById("saveWelcomeInfoBtn");
-  if (saveWelcomeBtn) {
-    saveWelcomeBtn.addEventListener("click", saveWelcomeInfo);
+  // Welcome Modal saqlash tugmasi
+  const saveWelcomeInfoBtn = document.getElementById("saveWelcomeInfoBtn");
+  if (saveWelcomeInfoBtn) {
+    saveWelcomeInfoBtn.addEventListener("click", () => {
+      const wName = document.getElementById("welcomeStudentName").value.trim();
+      const wSchool = document.getElementById("welcomeStudentSchool").value.trim();
+      if (!wName) {
+        showToast("Iltimos, Ism va Familiyangizni kiriting!", "error");
+        document.getElementById("welcomeStudentName").focus();
+        return;
+      }
+      if (!wSchool) {
+        showToast("Iltimos, Maktab va Sinfingizni kiriting!", "error");
+        document.getElementById("welcomeStudentSchool").focus();
+        return;
+      }
+      localStorage.setItem(STORAGE_KEYS.STUDENT_NAME, wName);
+      localStorage.setItem(STORAGE_KEYS.STUDENT_SCHOOL, wSchool);
+      document.getElementById("studentName").value = wName;
+      document.getElementById("studentSchool").value = wSchool;
+      document.getElementById("navStudentName").textContent = wName;
+      document.getElementById("welcomeModal").classList.remove("active");
+      showToast(`Xush kelibsiz, ${wName}!`, "success");
+    });
   }
 
+  // Profil tugmasi bosilganda ism-familiyani o'zgartirish
   const userProfileBtn = document.getElementById("userProfileBtn");
   if (userProfileBtn) {
     userProfileBtn.addEventListener("click", () => {
-      const welcomeModal = document.getElementById("welcomeModal");
-      if (welcomeModal) welcomeModal.classList.add("active");
+      const savedName = localStorage.getItem(STORAGE_KEYS.STUDENT_NAME) || "";
+      const savedSchool = localStorage.getItem(STORAGE_KEYS.STUDENT_SCHOOL) || "";
+      document.getElementById("welcomeStudentName").value = savedName;
+      document.getElementById("welcomeStudentSchool").value = savedSchool;
+      document.getElementById("welcomeModal").classList.add("active");
     });
   }
 
@@ -210,10 +235,31 @@ function setupEventListeners() {
   const schoolInput = document.getElementById("studentSchool");
   nameInput.addEventListener("input", () => {
     localStorage.setItem(STORAGE_KEYS.STUDENT_NAME, nameInput.value);
-    const navName = document.getElementById("navStudentName");
-    if (navName) navName.textContent = nameInput.value || "Profil";
+    document.getElementById("navStudentName").textContent = nameInput.value || "Profil";
   });
   schoolInput.addEventListener("input", () => localStorage.setItem(STORAGE_KEYS.STUDENT_SCHOOL, schoolInput.value));
+}
+
+function checkStudentWelcomeModal() {
+  const name = localStorage.getItem(STORAGE_KEYS.STUDENT_NAME);
+  const school = localStorage.getItem(STORAGE_KEYS.STUDENT_SCHOOL);
+  const welcomeModal = document.getElementById("welcomeModal");
+
+  if (name) {
+    document.getElementById("navStudentName").textContent = name;
+    document.getElementById("studentName").value = name;
+  } else {
+    document.getElementById("navStudentName").textContent = "Profil";
+  }
+  if (school) {
+    document.getElementById("studentSchool").value = school;
+  }
+
+  if (!name || !school) {
+    if (welcomeModal) {
+      welcomeModal.classList.add("active");
+    }
+  }
 }
 
 function switchTab(tabId) {
@@ -511,6 +557,8 @@ async function handleSubmission() {
   if (currentLanguage === "python") langLabel = "Python 3";
   else if (currentLanguage === "javascript") langLabel = "JavaScript (Node.js)";
 
+  const plainStatement = currentProblem.statement ? currentProblem.statement.replace(/\$([^\$]+)\$/g, '$1') : "";
+
   const submissionData = {
     timestamp: now.toISOString(),
     dateFormatted: now.toLocaleString("uz-UZ"),
@@ -518,11 +566,11 @@ async function handleSubmission() {
     school: school,
     problemId: currentProblem.id,
     problemTitle: currentProblem.title,
-    problemStatement: currentProblem.statement ? currentProblem.statement.replace(/\$([^\$]+)\$/g, '$1') : "",
+    problemStatement: plainStatement,
     topic: currentProblem.topicName,
     language: langLabel,
     code: code,
-    testVerdict: testResult.message || "Barcha testlardan o'tdi (AC)",
+    testVerdict: testResult.message || "AC - Accepted (Barcha testlardan o'tdi)",
     note: note || "-",
     status: "Topshirildi (AC - Testlardan o'tdi)"
   };
@@ -963,55 +1011,8 @@ async function sendToGoogleSheets(url, data) {
 function loadSavedStudentInfo() {
   const savedName = localStorage.getItem(STORAGE_KEYS.STUDENT_NAME);
   const savedSchool = localStorage.getItem(STORAGE_KEYS.STUDENT_SCHOOL);
-  const welcomeModal = document.getElementById("welcomeModal");
-  const navName = document.getElementById("navStudentName");
-
-  if (savedName) {
-    document.getElementById("studentName").value = savedName;
-    const wName = document.getElementById("welcomeStudentName");
-    if (wName) wName.value = savedName;
-    if (navName) navName.textContent = savedName;
-  }
-  if (savedSchool) {
-    document.getElementById("studentSchool").value = savedSchool;
-    const wSchool = document.getElementById("welcomeStudentSchool");
-    if (wSchool) wSchool.value = savedSchool;
-  }
-
-  // Agar ism-familiya hali kiritilmagan bo'lsa, kirish modalini darhol ko'rsatamiz
-  if (!savedName || !savedSchool) {
-    if (welcomeModal) welcomeModal.classList.add("active");
-  }
-}
-
-function saveWelcomeInfo() {
-  const nameVal = document.getElementById("welcomeStudentName").value.trim();
-  const schoolVal = document.getElementById("welcomeStudentSchool").value.trim();
-
-  if (!nameVal) {
-    showToast("Iltimos, Ism va Familiyangizni kiriting!", "error");
-    document.getElementById("welcomeStudentName").focus();
-    return;
-  }
-  if (!schoolVal) {
-    showToast("Iltimos, Maktab va Sinfingizni kiriting!", "error");
-    document.getElementById("welcomeStudentSchool").focus();
-    return;
-  }
-
-  localStorage.setItem(STORAGE_KEYS.STUDENT_NAME, nameVal);
-  localStorage.setItem(STORAGE_KEYS.STUDENT_SCHOOL, schoolVal);
-
-  document.getElementById("studentName").value = nameVal;
-  document.getElementById("studentSchool").value = schoolVal;
-
-  const navName = document.getElementById("navStudentName");
-  if (navName) navName.textContent = nameVal;
-
-  const welcomeModal = document.getElementById("welcomeModal");
-  if (welcomeModal) welcomeModal.classList.remove("active");
-
-  showToast(`Xush kelibsiz, ${nameVal}!`, "success");
+  if (savedName) document.getElementById("studentName").value = savedName;
+  if (savedSchool) document.getElementById("studentSchool").value = savedSchool;
 }
 
 function loadHistory() {
