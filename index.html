@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlgoOlimp — Dasturlash Musobaqalariga Tayyorgarlik Platformasi</title>
+  <meta name="description" content="Maktab va litsey o'quvchilarini dasturlash olimpiadalari va RoboContest musobaqalariga tayyorlovchi zamonaviy platforma." />
+  
+  <!-- Fontlar va Ikonkalar -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body class="dark-theme">
+  <!-- Asosiy navigatsiya -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <div class="logo-icon">
+          <i class="fa-solid fa-code"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">Algo<span class="gradient-text">Olimp</span></span>
+          <span class="brand-subtitle">Contest Prep Arena</span>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-link active" data-tab="problems-view">
+          <i class="fa-solid fa-list-check"></i> Masalalar
+        </button>
+        <button class="nav-link" data-tab="solve-view">
+          <i class="fa-solid fa-laptop-code"></i> Kod Yechish
+        </button>
+        <button class="nav-link" data-tab="cheatsheet-view">
+          <i class="fa-solid fa-book-bookmark"></i> Qo'llanma & Cheat-Sheet
+        </button>
+        <button class="nav-link" data-tab="history-view">
+          <i class="fa-solid fa-clock-rotate-left"></i> Mening Yechimlarim
+          <span class="badge submission-count" id="userSubCount">0</span>
+        </button>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="icon-btn" title="Mavzuni almashtirish">
+          <i class="fa-solid fa-sun"></i>
+        </button>
+        <button id="settingsBtn" class="icon-btn" title="Sozlamalar (Google Sheets ulanishi)">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Asosiy Konteyner -->
+  <main class="main-container">
+    
+    <!-- 1. MASALALAR RO'YXATI BO'LIMI -->
+    <section id="problems-view" class="tab-content active">
+      <!-- Banner -->
+      <div class="hero-banner">
+        <div class="hero-content">
+          <div class="hero-badge"><i class="fa-solid fa-trophy"></i> Respublika va Xalqaro Musobaqalarga Tayyorgarlik</div>
+          <h1>Dasturlash Olimpiadalari Masalalari</h1>
+          <p>Olimpiada, RoboContest va IOI formatidagi saralangan masalalarni C++ yoki Python tilida yeching va yechimlaringizni ustozingiz tekshirishi uchun yuboring.</p>
+          <div class="hero-stats">
+            <div class="stat-box">
+              <span class="stat-number" id="totalProblemsCount">0</span>
+              <span class="stat-label">Jami Masalalar</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number" id="solvedCount">0</span>
+              <span class="stat-label">Yechilgan</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number">2</span>
+              <span class="stat-label">Tillar (C++, Python)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Qidiruv va Filtrlar -->
+      <div class="filters-bar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="problemSearchInput" placeholder="Masala nomi yoki ID bo'yicha qidirish..." />
+        </div>
+
+        <div class="filter-dropdowns">
+          <select id="topicFilter" class="select-control">
+            <option value="all">Barcha mavzular</option>
+            <option value="linear">Chiziqli algoritmlar</option>
+            <option value="conditions">Shart operatorlari (if-else)</option>
+            <option value="loops">Sikllar (for, while)</option>
+            <option value="arrays">Massivlar (Arrays)</option>
+            <option value="strings">Satrlar (Strings)</option>
+            <option value="functions">Funksiyalar va Matematika</option>
+            <option value="sorting">Saralash va Qidiruv</option>
+          </select>
+
+          <select id="difficultyFilter" class="select-control">
+            <option value="all">Barcha qiyinchiliklar</option>
+            <option value="Oson">🟢 Oson</option>
+            <option value="O'rta">🟡 O'rta</option>
+            <option value="Qiyin">🔴 Qiyin</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Masalalar Jadvali / Grid -->
+      <div class="problems-grid" id="problemsList">
+        <!-- JavaScript orqali to'ldiriladi -->
+      </div>
+    </section>
+
+    <!-- 2. KOD YECHISH VA TOPSHIRISH BO'LIMI -->
+    <section id="solve-view" class="tab-content">
+      <div class="solve-layout">
+        <!-- Chap panel: Masala sharti va namunalari -->
+        <div class="problem-details-panel card">
+          <div class="panel-header">
+            <div class="problem-meta-top">
+              <span class="badge" id="solveProblemCategory">Mavzu</span>
+              <span class="badge" id="solveProblemDifficulty">Daraja</span>
+            </div>
+            <h2 id="solveProblemTitle" class="problem-title">Masalani tanlang</h2>
+          </div>
+
+          <div class="panel-body problem-description-scroll">
+            <div class="desc-section">
+              <h3><i class="fa-solid fa-file-lines"></i> Masala sharti:</h3>
+              <p id="solveProblemStatement">Chapdagi ro'yxatdan birorta masalani tanlang.</p>
+            </div>
+
+            <div class="desc-section">
+              <h3><i class="fa-solid fa-arrow-right-to-bracket"></i> Kiruvchi ma'lumotlar (Input):</h3>
+              <p id="solveProblemInput">-</p>
+            </div>
+
+            <div class="desc-section">
+              <h3><i class="fa-solid fa-arrow-up-right-from-square"></i> Chiquvchi ma'lumotlar (Output):</h3>
+              <p id="solveProblemOutput">-</p>
+            </div>
+
+            <div class="desc-section">
+              <h3><i class="fa-solid fa-flask"></i> Namunaviy testlar:</h3>
+              <div id="solveProblemSamples" class="samples-container">
+                <!-- Testlar dinamik chiqadi -->
+              </div>
+            </div>
+
+            <div class="desc-section" id="solveProblemHintWrapper">
+              <h3><i class="fa-solid fa-lightbulb"></i> Maslahat / Eslatma:</h3>
+              <p id="solveProblemHint" class="hint-text">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- O'ng panel: O'quvchi ma'lumotlari, Kod muharriri va Submit -->
+        <div class="solve-editor-panel card">
+          <!-- O'quvchi ma'lumotlari formasi -->
+          <div class="student-info-bar">
+            <div class="input-group">
+              <label for="studentName"><i class="fa-solid fa-user"></i> Ism va Familiya:</label>
+              <input type="text" id="studentName" placeholder="Masalan: Ali Valiyev" required />
+            </div>
+            <div class="input-group">
+              <label for="studentSchool"><i class="fa-solid fa-school"></i> Maktab va Sinf:</label>
+              <input type="text" id="studentSchool" placeholder="Masalan: 1-IDUM, 9-A sinf" required />
+            </div>
+          </div>
+
+          <!-- Muharrir boshqaruvi -->
+          <div class="editor-toolbar">
+            <div class="lang-selector">
+              <label><i class="fa-solid fa-code"></i> Til:</label>
+              <select id="codeLanguage">
+                <option value="cpp">C++ (G++ 17/20)</option>
+                <option value="python">Python 3</option>
+              </select>
+            </div>
+
+            <div class="editor-actions">
+              <button class="btn btn-secondary btn-sm" id="resetTemplateBtn" title="Boshlang'ich kod shablonini tiklash">
+                <i class="fa-solid fa-rotate-left"></i> Shablon
+              </button>
+              <button class="btn btn-secondary btn-sm" id="copyCodeBtn" title="Kodni nusxalash">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Kod kiritish maydoni -->
+          <div class="code-editor-wrapper">
+            <div class="line-numbers" id="lineNumbers">1</div>
+            <textarea id="codeTextarea" spellcheck="false" placeholder="Kodingizni shu yerga yozing..."></textarea>
+          </div>
+
+          <!-- Izoh va Yuborish qismi -->
+          <div class="submit-footer">
+            <div class="notes-input-wrapper">
+              <input type="text" id="submissionNote" placeholder="Qo'shimcha izoh yoki savol bo'lsa yozing (ixtiyoriy)..." />
+            </div>
+
+            <div class="submit-action">
+              <button id="submitSolutionBtn" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-paper-plane"></i> Yechimni Topshirish
+              </button>
+            </div>
+          </div>
+          
+          <div id="submitStatusMsg" class="submit-status-message"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. QO'LLANMA VA CHEAT-SHEET BO'LIMI -->
+    <section id="cheatsheet-view" class="tab-content">
+      <div class="cheatsheet-container">
+        <div class="section-title">
+          <h2><i class="fa-solid fa-graduation-cap"></i> Musobaqa Qoidalari va Olimpiada Cheat-Sheet</h2>
+          <p>Musobaqalarda eng ko'p qo'llaniladigan usullar, xatoliklar turlari va C++ hamda Python dasturlash tillari bo'yicha tayyor shablonlar.</p>
+        </div>
+
+        <div class="cheatsheet-grid">
+          <!-- 1. Musobaqa Xatoliklari (Verdicts) -->
+          <div class="guide-card">
+            <div class="guide-card-header">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <h3>Musobaqa Hukmlari (Verdicts)</h3>
+            </div>
+            <div class="guide-card-body">
+              <ul class="verdict-list">
+                <li><strong class="verdict ac">AC (Accepted)</strong> — Yechim to'g'ri va barcha testlardan muvaffaqiyatli o'tdi!</li>
+                <li><strong class="verdict wa">WA (Wrong Answer)</strong> — Dastur natijasi namunaviy yoki maxfiy testga to'g'ri kelmadi. Chekka holatlarni (0, manfiy sonlar, katta sonlar) tekshiring.</li>
+                <li><strong class="verdict tle">TLE (Time Limit Exceeded)</strong> — Kod belgilangan vaqtdan (odatda 1.0 soniya) ko'p ishladi. Sikllarni optimallashtiring (masalan, O(N²) o'rniga O(N log N)).</li>
+                <li><strong class="verdict mle">MLE (Memory Limit Exceeded)</strong> — Ajratilgan xotiradan (odatda 256MB) ko'p xotira band qilindi. Katta massivlarni ehtiyotkorlik bilan e'lon qiling.</li>
+                <li><strong class="verdict ce">CE (Compilation Error)</strong> — Sintaksis xatolik! Kodingiz kompyuterda kompilyatsiya qilinmadi (nuqta-vergul, qavslarni tekshiring).</li>
+                <li><strong class="verdict re">RE (Runtime Error)</strong> — Dastur bajarilish vaqtida to'xtadi (0 ga bo'lish yoki massiv chegarasidan chiqib ketish).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 2. C++ Tezkor I/O va Shablon -->
+          <div class="guide-card">
+            <div class="guide-card-header">
+              <i class="fa-solid fa-bolt"></i>
+              <h3>C++ Musobaqa Shabloni & Fast I/O</h3>
+            </div>
+            <div class="guide-card-body">
+              <p>C++ da cin/cout sekin ishlashi mumkin. Buning oldini olish uchun Fast I/O satrlarini qo'shing:</p>
+              <pre class="code-block"><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int main() {
+    // Tezkor kiritish/chiqarish (Fast I/O)
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    long long n;
+    cin &gt;&gt; n;
+    
+    // Katta sonlar uchun long long ishlating!
+    cout &lt;&lt; n &lt;&lt; "\n"; // endl o'rniga "\n" tezroq ishlaydi
+    return 0;
+}</code></pre>
+            </div>
+          </div>
+
+          <!-- 3. Python Musobaqa Maslahatlari -->
+          <div class="guide-card">
+            <div class="guide-card-header">
+              <i class="fa-brands fa-python"></i>
+              <h3>Python Musobaqa Maslahatlari</h3>
+            </div>
+            <div class="guide-card-body">
+              <p>Pythonda bir qatorda kiritilgan sonlarni o'qib olish va tezkor kiritish usullari:</p>
+              <pre class="code-block"><code>import sys
+# Tezkor o'qish uchun:
+input = sys.stdin.readline
+
+# Bitta qatordagi bir nechta butun sonlarni o'qish:
+a, b = map(int, input().split())
+
+# Ro'yxat (massiv) qilib o'qib olish:
+arr = list(map(int, input().split()))
+
+# Rekursiya chuqurligini oshirish:
+sys.setrecursionlimit(200000)</code></pre>
+            </div>
+          </div>
+
+          <!-- 4. Qimmatli Maslahatlar -->
+          <div class="guide-card">
+            <div class="guide-card-header">
+              <i class="fa-solid fa-star"></i>
+              <h3>Olimpiadada G'alaba Qozonish Sirlari</h3>
+            </div>
+            <div class="guide-card-body">
+              <ol class="tips-list">
+                <li><strong>Masala shartini 2 marta to'liq o'qing:</strong> Cheklovlar ($1 \le N \le 10^9$) va turlarni aniqlang.</li>
+                <li><strong>Katta sonlar:</strong> Agar natija $10^9$ dan oshsa, C++ da `int` emas, albatta `long long` ishlating.</li>
+                <li><strong>Qoralama daftar:</strong> Kod yozishdan oldin qog'ozda misol testni qo'lda hisoblab ko'ring.</li>
+                <li><strong>Oddiy testlardan boshlang:</strong> Eng oson masalani birinchi yechib o'zingizga ishonch hosil qiling.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. MENING YECHIMLARIM (TARIX) BO'LIMI -->
+    <section id="history-view" class="tab-content">
+      <div class="history-container card">
+        <div class="history-header">
+          <div>
+            <h2><i class="fa-solid fa-clock-rotate-left"></i> Topshirilgan Yechimlar Tarixi</h2>
+            <p>Siz ushbu qurilmadan topshirgan barcha masalalar ro'yxati va Google Sheets'ga yuborilganlik holati.</p>
+          </div>
+          <button id="clearHistoryBtn" class="btn btn-danger btn-sm">
+            <i class="fa-solid fa-trash"></i> Tarixni tozalash
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Vaqt</th>
+                <th>O'quvchi</th>
+                <th>Masala</th>
+                <th>Til</th>
+                <th>Holat</th>
+                <th>Amal</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <!-- JavaScript orqali to'ldiriladi -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Google Sheets Sozlamalari Modali -->
+  <div id="settingsModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-sliders"></i> O'qituvchi / Administrator Sozlamalari</h3>
+        <button class="close-modal-btn" id="closeSettingsModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>O'quvchilar yuborgan barcha yechimlar Google Jadvalingizga (Google Sheets) tushishi uchun Google Apps Script Web App havolasini (URL) kiriting:</p>
+        
+        <div class="input-group">
+          <label for="sheetsWebhookInput">Google Apps Script Web App URL:</label>
+          <input type="url" id="sheetsWebhookInput" placeholder="https://script.google.com/macros/s/.../exec" />
+          <small class="field-hint">Bu havola brauzeringizda xavfsiz saqlanadi. O'rnatish yo'riqnomasi <code>GOOGLE_SHEETS_SETUP.md</code> faylida ko'rsatilgan.</small>
+        </div>
+
+        <div class="alert-box">
+          <i class="fa-solid fa-circle-info"></i>
+          <div>
+            <strong>Netlify uchun tayyor!</strong> Ushbu saytni Netlify'ga joylaganingizda (deploy) hech qanday server kerak emas. O'quvchilar javoblari to'g'ridan-to'g'ri shu Google Sheets havolangizga yoziladi.
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="testWebhookBtn" class="btn btn-secondary">
+          <i class="fa-solid fa-vial"></i> Test yuborish
+        </button>
+        <button id="saveSettingsBtn" class="btn btn-primary">
+          <i class="fa-solid fa-check"></i> Saqlash
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Yechim ko'rish Modali (Tarixdagi kodni ko'rish uchun) -->
+  <div id="viewCodeModal" class="modal-overlay">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3 id="viewCodeModalTitle">Topshirilgan Kod</h3>
+        <button class="close-modal-btn" id="closeCodeModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="code-view-wrapper">
+          <pre><code id="viewCodeModalContent"></code></pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="loadIntoEditorBtn" class="btn btn-primary">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Ushbu kodni muharrirga yuklash
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast xabarnomalar -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Skriptlar -->
+  <script src="./js/problems.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>
