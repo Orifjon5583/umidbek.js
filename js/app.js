@@ -191,10 +191,28 @@ function setupEventListeners() {
     }
   });
 
+  // Welcome modal va profil boshqaruvi
+  const saveWelcomeBtn = document.getElementById("saveWelcomeInfoBtn");
+  if (saveWelcomeBtn) {
+    saveWelcomeBtn.addEventListener("click", saveWelcomeInfo);
+  }
+
+  const userProfileBtn = document.getElementById("userProfileBtn");
+  if (userProfileBtn) {
+    userProfileBtn.addEventListener("click", () => {
+      const welcomeModal = document.getElementById("welcomeModal");
+      if (welcomeModal) welcomeModal.classList.add("active");
+    });
+  }
+
   // O'quvchi ma'lumotlarini saqlash
   const nameInput = document.getElementById("studentName");
   const schoolInput = document.getElementById("studentSchool");
-  nameInput.addEventListener("input", () => localStorage.setItem(STORAGE_KEYS.STUDENT_NAME, nameInput.value));
+  nameInput.addEventListener("input", () => {
+    localStorage.setItem(STORAGE_KEYS.STUDENT_NAME, nameInput.value);
+    const navName = document.getElementById("navStudentName");
+    if (navName) navName.textContent = nameInput.value || "Profil";
+  });
   schoolInput.addEventListener("input", () => localStorage.setItem(STORAGE_KEYS.STUDENT_SCHOOL, schoolInput.value));
 }
 
@@ -500,9 +518,11 @@ async function handleSubmission() {
     school: school,
     problemId: currentProblem.id,
     problemTitle: currentProblem.title,
+    problemStatement: currentProblem.statement ? currentProblem.statement.replace(/\$([^\$]+)\$/g, '$1') : "",
     topic: currentProblem.topicName,
     language: langLabel,
     code: code,
+    testVerdict: testResult.message || "Barcha testlardan o'tdi (AC)",
     note: note || "-",
     status: "Topshirildi (AC - Testlardan o'tdi)"
   };
@@ -943,8 +963,55 @@ async function sendToGoogleSheets(url, data) {
 function loadSavedStudentInfo() {
   const savedName = localStorage.getItem(STORAGE_KEYS.STUDENT_NAME);
   const savedSchool = localStorage.getItem(STORAGE_KEYS.STUDENT_SCHOOL);
-  if (savedName) document.getElementById("studentName").value = savedName;
-  if (savedSchool) document.getElementById("studentSchool").value = savedSchool;
+  const welcomeModal = document.getElementById("welcomeModal");
+  const navName = document.getElementById("navStudentName");
+
+  if (savedName) {
+    document.getElementById("studentName").value = savedName;
+    const wName = document.getElementById("welcomeStudentName");
+    if (wName) wName.value = savedName;
+    if (navName) navName.textContent = savedName;
+  }
+  if (savedSchool) {
+    document.getElementById("studentSchool").value = savedSchool;
+    const wSchool = document.getElementById("welcomeStudentSchool");
+    if (wSchool) wSchool.value = savedSchool;
+  }
+
+  // Agar ism-familiya hali kiritilmagan bo'lsa, kirish modalini darhol ko'rsatamiz
+  if (!savedName || !savedSchool) {
+    if (welcomeModal) welcomeModal.classList.add("active");
+  }
+}
+
+function saveWelcomeInfo() {
+  const nameVal = document.getElementById("welcomeStudentName").value.trim();
+  const schoolVal = document.getElementById("welcomeStudentSchool").value.trim();
+
+  if (!nameVal) {
+    showToast("Iltimos, Ism va Familiyangizni kiriting!", "error");
+    document.getElementById("welcomeStudentName").focus();
+    return;
+  }
+  if (!schoolVal) {
+    showToast("Iltimos, Maktab va Sinfingizni kiriting!", "error");
+    document.getElementById("welcomeStudentSchool").focus();
+    return;
+  }
+
+  localStorage.setItem(STORAGE_KEYS.STUDENT_NAME, nameVal);
+  localStorage.setItem(STORAGE_KEYS.STUDENT_SCHOOL, schoolVal);
+
+  document.getElementById("studentName").value = nameVal;
+  document.getElementById("studentSchool").value = schoolVal;
+
+  const navName = document.getElementById("navStudentName");
+  if (navName) navName.textContent = nameVal;
+
+  const welcomeModal = document.getElementById("welcomeModal");
+  if (welcomeModal) welcomeModal.classList.remove("active");
+
+  showToast(`Xush kelibsiz, ${nameVal}!`, "success");
 }
 
 function loadHistory() {

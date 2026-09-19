@@ -3,18 +3,18 @@
 Siz taqdim etgan Google Jadval havolasi:
 👉 **[Sizning Jadvalingiz](https://docs.google.com/spreadsheets/d/1UzfTgjN47KEItinomUqdnz89CQ9N6Oq7nXIGrpJJEXg/edit?usp=sharing)**
 
-Ushbu jadval **o'quvchilarga mutlaqo ko'rinmaydi**. O'quvchi saytda faqat masalani ko'radi va kodini topshiradi. Uning yozgan kodi to'g'ridan-to'g'ri sizning jadvalingizga kelib tushadi.
+Ushbu jadval **o'quvchilarga mutlaqo ko'rinmaydi**. O'quvchi saytga kirganda ism-familiyasi va maktabini kiritadi. Topshirgan har bir yechimi (vaqt, masala nomi, masala sharti, kodi va kodni tekshirish xulosasi) avtomatik ravishda jadvalingizga kelib tushadi.
 
 ---
 
 ## 🛠 Jadvalni 2 daqiqada faollashtirish (Qadamma-qadam):
 
 ### 1-Qadam: Jadvalga sarlavhalarni yozing
-Jadvalingizning 1-qatoriga quyidagi 10 ta ustun nomini yozib qo'ying:
+Jadvalingizning 1-qatoriga quyidagi 9 ta ustun nomini yozib qo'ying:
 
-| A | B | C | D | E | F | G | H | I | J |
-|---|---|---|---|---|---|---|---|---|---|
-| **Sana va Vaqt** | **O'quvchi Ismi** | **Maktab va Sinf** | **Masala ID** | **Masala Nomi** | **Mavzu** | **Dasturlash Tili** | **Yechim Kodi** | **Izoh** | **Holat** |
+| A | B | C | D | E | F | G | H | I |
+|---|---|---|---|---|---|---|---|---|
+| **Sana va Vaqt** | **O'quvchi Ism Familiyasi** | **Maktab va Sinf** | **Masala ID va Nomi** | **Topshiriq Sharti** | **Dasturlash Tili** | **O'quvchi Kodi** | **Kodni Tekshirish Xulosasi** | **Izoh** |
 
 ---
 
@@ -26,7 +26,6 @@ Jadvalingizning 1-qatoriga quyidagi 10 ta ustun nomini yozib qo'ying:
 ```javascript
 function doPost(e) {
   try {
-    // Sizning shaxsiy Google Jadvalingiz ID raqami
     var SPREADSHEET_ID = "1UzfTgjN47KEItinomUqdnz89CQ9N6Oq7nXIGrpJJEXg";
     var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     var sheet = ss.getActiveSheet();
@@ -37,17 +36,18 @@ function doPost(e) {
       data.dateFormatted || new Date().toLocaleString("uz-UZ"),
       data.studentName || "Noma'lum",
       data.school || "Noma'lum",
-      data.problemId || "-",
-      data.problemTitle || "-",
-      data.topic || "-",
+      (data.problemId ? data.problemId + ": " : "") + (data.problemTitle || ""),
+      data.problemStatement || "-",
       data.language || "-",
       data.code || "-",
-      data.note || "-",
-      data.status || "Topshirildi"
+      data.testVerdict || "AC (Barcha testlardan o'tdi)",
+      data.note || "-"
     ]);
 
-    // Kod ustunini chiroyli ko'rsatish
+    // Topshiriq sharti, Kod va Xulosa ustunlarini matnini qatorma-qator qilib moslash (wrap)
     var lastRow = sheet.getLastRow();
+    sheet.getRange(lastRow, 5).setWrap(true);
+    sheet.getRange(lastRow, 7).setWrap(true);
     sheet.getRange(lastRow, 8).setWrap(true);
 
     return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
@@ -78,7 +78,7 @@ function doGet(e) {
 
 ---
 
-### 4-Qadam: Web App URL ni menga yuboring yoki `js/app.js` ga qo'ying
+### 4-Qadam: Web App URL ni menga yuboring
 O'sha chiqqan `https://script.google.com/macros/s/.../exec` havolani shu yerga chatga tashlasangiz, men uni sayt ichiga bir marta ulab, GitHub'ga push qilib qo'yaman.
 
-Shundan so'ng, saytda hech qanday sozlama tugmasi ko'rinmaydi, o'quvchilar jadvalingiz borligini ham bilishmaydi, lekin ular yozgan har bitta kod to'g'ridan-to'g'ri sizning jadvalingizga tushaveradi!
+Shundan so'ng, saytda hech qanday sozlama tugmasi ko'rinmaydi, o'quvchilar jadvalingiz borligini ham bilishmaydi, lekin ular yozgan har bitta kod va tekshiruv xulosasi to'g'ridan-to'g'ri sizning jadvalingizga tushaveradi!

@@ -45,6 +45,9 @@
       </nav>
 
       <div class="nav-actions">
+        <button id="userProfileBtn" class="btn btn-secondary btn-sm" title="Profil ma'lumotlarini o'zgartirish">
+          <i class="fa-solid fa-user-circle"></i> <span id="navStudentName">Profil</span>
+        </button>
         <button id="themeToggleBtn" class="icon-btn" title="Mavzuni almashtirish">
           <i class="fa-solid fa-sun"></i>
         </button>
@@ -392,6 +395,37 @@ solve();</code></pre>
       <div class="modal-footer">
         <button id="loadIntoEditorBtn" class="btn btn-primary">
           <i class="fa-solid fa-arrow-up-right-from-square"></i> Ushbu kodni muharrirga yuklash
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Saytga kirishda Ism va Familiya so'rash Modali -->
+  <div id="welcomeModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header" style="background: linear-gradient(135deg, rgba(31, 111, 235, 0.2), rgba(137, 87, 229, 0.2)); border-bottom: 1px solid var(--border-color);">
+        <h3><i class="fa-solid fa-user-graduate"></i> AlgoOlimp — Xush kelibsiz!</h3>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 0.95rem; margin-bottom: 1.25rem;">
+          Platformadan foydalanish hamda topshirgan masalalaringiz va kodingiz ustozingizning Google Sheets jadvaliga to'g'ri tushishi uchun ism va maktabingizni kiriting:
+        </p>
+
+        <form id="welcomeForm" onsubmit="return false;">
+          <div class="input-group" style="margin-bottom: 1rem;">
+            <label for="welcomeStudentName"><i class="fa-solid fa-user"></i> Ism va Familiya <span style="color: var(--accent-danger);">*</span>:</label>
+            <input type="text" id="welcomeStudentName" placeholder="Masalan: Ali Valiyev" required style="padding: 0.75rem 1rem; font-size: 0.95rem;" />
+          </div>
+
+          <div class="input-group" style="margin-bottom: 1rem;">
+            <label for="welcomeStudentSchool"><i class="fa-solid fa-school"></i> Maktab va Sinf <span style="color: var(--accent-danger);">*</span>:</label>
+            <input type="text" id="welcomeStudentSchool" placeholder="Masalan: 1-IDUM, 9-A sinf" required style="padding: 0.75rem 1rem; font-size: 0.95rem;" />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="justify-content: flex-end;">
+        <button id="saveWelcomeInfoBtn" class="btn btn-primary btn-lg" style="width: 100%;">
+          <i class="fa-solid fa-arrow-right"></i> Platformaga Kirish
         </button>
       </div>
     </div>
